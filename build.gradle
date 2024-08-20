@@ -4,14 +4,14 @@ plugins {
     id 'maven-publish'
 }
 
-group = 'ru.clevertec.course'
+group = 'ru.clevertec.plugin'
 version = '1.0'
 
 gradlePlugin {
     plugins {
         pluginName {
             id = 'ru.clevertec.plugin'
-            implementationClass = 'ru.clevertec.plugin.GitTagPlugin'
+            implementationClass = 'ru.clevertec.course.GitTagPlugin'
         }
     }
 }

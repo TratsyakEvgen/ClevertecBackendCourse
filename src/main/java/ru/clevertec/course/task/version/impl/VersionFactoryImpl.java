@@ -2,23 +2,28 @@ package ru.clevertec.course.task.version.impl;
 
 import ru.clevertec.course.task.version.Version;
 import ru.clevertec.course.task.version.VersionFactory;
+import ru.clevertec.course.task.version.VersionMapper;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class VersionFactoryImpl implements VersionFactory {
+
+    private final VersionMapper versionMapper;
+
+    private final Comparator<Version> comparator;
+
+    public VersionFactoryImpl(VersionMapper versionMapper, Comparator<Version> comparator) {
+        this.versionMapper = versionMapper;
+        this.comparator = comparator;
+    }
+
     @Override
     public Version getLastVersion(List<String> strings) {
-        String[] stringVersionValue = strings.stream()
-                .map(line -> {
-                    line = line.replace("v", "");
-                    return Double.parseDouble(line);
-                })
-                .max(Double::compare)
-                .orElse(0.0)
-                .toString()
-                .split("\\.");
-
-        return new VersionImpl(Integer.parseInt(stringVersionValue[0]), Integer.parseInt(stringVersionValue[1]));
+        return strings.stream()
+                .map(versionMapper::parse)
+                .max(comparator)
+                .orElseGet(() -> new Version(0, 0));
 
     }
 }
